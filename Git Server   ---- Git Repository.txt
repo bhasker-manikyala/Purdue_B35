@@ -1,0 +1,99 @@
+Linux Fundamentals, shell scripting/Python  --- Simple scripts
+
+git  -- 99%
+
+
+GitHub  ---- Default Branch is "main"
+
+
+Git   --- Default Branch is "master"
+
+
+Git + Jenkins + Kubernetes = Openshift
+
+token
+
+
+SSH --- Secure Shell  --- Remote access
+
+
+Local Machine:
+
+1. Generate SSH Public/Private key pair
+
+$ whoami
+
+$ hostname
+
+$ ssh-keygen -t rsa
+OR
+$ ssh-keygen -t rsa -P ""
+
+
+$ All ssh-keys will be located in the Current user home directory /home/edureka/.ssh/id_rsa
+                                                                  /home/edureka/.ssh/id_rsa.pub
+
+$ cat /home/edureka/.ssh/id_rsa.pub
+
+
+$ Go to GitHub Server  --- Account Settings  --- SSH and GPG Keys  -- Add SSH Key
+
+
+$ ssh -T git@github.com
+
+You've successfully authenticated, but Github does not provide shell access.
+
+
+
+$ git clone git@github.com:bhasker-manikyala/create_repository.git second_git_project
+
+$ git push origin main   --- It should not ask for username/token
+
+
+1  key-based
+
+1  password-less
+
+1 OTP 
+
+
+$ git branch <branch>
+
+OR
+
+$ git checkout -b <branch>
+
+$ git branch <branch> <commit-identifier>
+
+$ git stash <branch>
+
+$ git checkout -b <remote-repo>
+
+
+$ git push origin main   
+
+$ git push origin feature
+
+OR
+
+$ git push origin --all
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CICD    === GitHub Actions  PaaS
+
+git + jenkins   == GitHub Actions
+
+
+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
