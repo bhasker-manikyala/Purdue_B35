@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: ensure nginx is at the latest version
+      apt: 
+        name: nginx 
+        state: latest
+    - name: copy the content of the web site
+      shell: echo "hi there, Ansible is Cool" > "/var/www/html/index.html"
+    - name: start nginx
+      service:
+          name: nginx
+          state: restarted
+#   - name: stop nginx
+#      service:
+#          name: nginx
+#          state: stopped
+#    - name: ensure nginx is not installed
+#      apt: 
+#        name: nginx 
+#        state: absent

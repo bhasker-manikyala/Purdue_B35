@@ -1,0 +1,79 @@
+---
+- hosts: web
+  become: yes
+  tasks:
+   - name: Install Java 1.8
+     apt:     ## apt-get install openjdk-8-jdk -y
+      name: openjdk-8-jdk
+      state: present
+
+   - name: add group "tomcat"
+     group:  ## groupadd tomcat
+       name: tomcat
+
+   - name: add user "tomcat"
+     user:  ## useradd tomcat -G tomcat
+      name: tomcat
+      group: tomcat
+      createhome: no
+
+   - name: Download Tomcat
+     get_url:  ### wget url -O /tmp/tomca.tgz
+       url: https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.40/bin/apache-tomcat-8.5.40.tar.gz
+       dest: /tmp/apache-tomcat-8.5.40.tar.gz
+
+   - name: Extract archive
+     unarchive:  ## tar -xzf tarfile ## by default source is always controller
+        src: /tmp/apache-tomcat-8.5.40.tar.gz
+        dest: /opt
+        remote_src: yes
+
+   - name: create symlink
+     file:   ## ln -s /opt/tomcat /opt/apache-tomcat-8.5.40
+       src: /opt/apache-tomcat-8.5.40
+       path: /opt/tomcat
+       state: link
+
+   - name: Change ownership of Tomcat installation
+     file: ## chmod 755 -R /opt/tomcat , chown tomcat:tomcat -R /opt/tomcat
+       path: /opt/tomcat
+       owner: tomcat
+       group: tomcat
+       mode: 0755
+       state: directory
+       recurse: yes
+
+   - name: create tomcat.service file
+     file: ## touch /etc/systemd/system/tomcat.service
+      path: /etc/systemd/system/tomcat.service
+      state: touch
+
+   - name: create tomcat service
+     blockinfile:
+       path: /etc/systemd/system/tomcat.service
+       block: |
+         [Unit]
+         Description=Tomcat - instance %i
+         After=syslog.target network.target
+         [Service]
+         Type=forking
+         User=tomcat
+         Group=tomcat
+         Environment="CATALINA_HOME=/opt/tomcat/"
+         ExecStart=/opt/tomcat/bin/startup.sh
+         ExecStop=/opt/tomcat/bin/shutdown.sh
+         [Install]
+         WantedBy=multi-user.target
+
+   - name: enable & start tomcat service
+     systemd: ## systemctl enable tomcat, systecctl start tomcat
+        name: tomcat
+        state: started
+        enabled: yes
+        
+   - name: validate tomcat is running
+     shell: service tomcat status
+     register: tstatus
+
+   - debug:
+       var: tstatus.stdout_lines

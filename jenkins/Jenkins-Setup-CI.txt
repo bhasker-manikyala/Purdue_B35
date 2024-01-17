@@ -1,0 +1,38 @@
+Install Plugins required for CI Pipeline
+
+	Manage Jenkins --> manage plugins -- Available -- search & install the below
+		Warning NG -- install without restart
+		cobertura -- install without restart
+		Build Pipeline Plugin  -- install without restart
+
+			
+=================================================================================================================
+
+Java configuration in Jenkins console 
+	
+	Manage Jenkins --> Global Tool Configuration --> JDK --> Add JDK
+		Name: myjava ( can be any string )
+		JAVA_HOME: /path/to/javahome ( ex: /usr/lib/jvm/java )
+
+Maven Configuration in Jenkins console
+	
+	Manage Jenkins --> Global Tool Configuration --> Maven --> Add Maven
+		Name: maven3.6 ( can be any string )
+		MAVEN_HOME: /path/to/mavenhome ( /opt/apache-maven-3.6.0 )
+		
+=============================================================================================================
+
+Jenkins ( CI )
+
+CI ( continuous Integration )
+
+Jenkins Job      : maven goal           : post build action 
+                
+                 
+job1-codereview	 : -P metrics pmd:pmd   : **/pmd.xml ( publish pmd analysis results )
+                 
+job2-unittest    : test                 : target/surefire-reports/*.xml
+                 
+job3-codecoverage : cobertura:cobertura -Dcobertura.report.format=xml  : target/site/cobertura/coverage.xml ( publish cobertura coverage report )
+                 
+job4-package     : package              : NA

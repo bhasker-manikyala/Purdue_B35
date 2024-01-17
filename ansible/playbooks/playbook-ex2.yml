@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks: 
+#### execute shell script & print the output
+    - name : execute a shell
+      script: /tmp/test.sh
+      register: abc
+    - debug:
+         msg: "{{ abc.stdout_lines }}"
+#### create a files
+    - name: restart a service 
+      shell: echo "`hostname`"
+      register: xyz
+    - debug: 
+         msg: "value of xyz is: {{ xyz.stdout_lines }}"
