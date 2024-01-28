@@ -1,0 +1,62 @@
+Git Server Configuration:
+
+$ sudo add-apt-repository ppa:git-core/ppa
+
+$ sudo apt-get update && sudo apt-get install git -y
+
+$ sudo adduser git
+
+$ su - git
+
+$ mkdir project-1.git
+
+$ cd project-1.git
+
+$ git init --bare
+
+
+
+
+
+
+
+Git Client Configuration:
+
+$ sudo add-apt-repository ppa:git-core/ppa
+
+$ sudo apt-get update && sudo apt-get install git -y
+
+$ sudo adduser git
+
+$ su - git
+
+$ mkdir project
+
+$ cd project
+
+$ git init
+
+$ touch file1.txt file2.txt
+
+$ git add .
+
+$ git commit -m "Added files"
+
+
+$ git remote add origin ssh://git@172.31.6.109/home/git/project-1.git
+
+$ git push origin master
+
+Password-based authentication
+
+
+$ ssh-keygen
+
+$ ssh-copy-id git@172.31.6.109
+
+
+$ git push origin master
+
+Password-less authentication
+
+
