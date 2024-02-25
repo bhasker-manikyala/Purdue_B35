@@ -1,0 +1,55 @@
+latest jenkins.war
+
+OR
+
+OS Package manager
+
+Pre-work:
+
+1. Super user or equivalent access 
+
+2. Backup existing configuration  --- case need to revert to old config
+
+3. If Jenkins host is a Virtual Server --- prefer to take a snapshot of the machine
+
+
+Stop the Jenkin server
+
+ $ sudo systemctl stop jenkins
+
+
+Method 1:
+
+$ sudo mkdir /jenkins-war
+$ cd /jenkins-war
+$ sudo cp -p /usr/share/java/jenkins.war jenkins.war.orig
+
+$ wget https://get.jenkins.io/war-stable/2.440.1/jenkins.war
+
+$ cp -pr jenkins.war /usr/share/java
+$ chown root:root /usr/share/java/jenkins.war
+$ chmod 644 /usr/share/java/jenkins.war
+
+
+$ sudo systemctl restart jenkins
+
+
+
+Methid 2: OS Package Manager
+
+ubuntu@ip-172-31-30-51:/etc/apt/sources.list.d$ sudo apt list --installed jenkins
+Listing... Done
+jenkins/binary,now 2.426.3 all [installed,upgradable to: 2.440.1]
+N: There are 144 additional versions. Please use the '-a' switch to see them.
+
+$ sudo apt-get update
+
+$ sudo apt-get install jenkins
+
+$ ubuntu@ip-172-31-30-51:/etc/apt/sources.list.d$ sudo apt list --installed jenkins
+Listing... Done
+jenkins/binary,now 2.440.1 all [installed]
+N: There are 145 additional versions. Please use the '-a' switch to see them.
+
+
+$ sudo systemctl restart jenkins
