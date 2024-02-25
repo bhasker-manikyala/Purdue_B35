@@ -1,0 +1,21 @@
+1. Stop Jenkins services
+
+   $ sudo systemctl stop jenkins
+
+
+2. Move the default home directory to new home dir.
+
+   $ sudo mkdir /apps
+   $ sudo chown jenkins:jenkins /apps
+   $ sudo cp -rp /var/lib/jenkins /apps
+   $ sudo usermod -d /apps/jenkins jenkins
+
+
+3. /etc/default/jenkins --- Configuration file
+
+       JENKINS_HOME=/apps/$NAME
+
+
+4. Restart Jenkins services
+
+   $ sudo systemctl restart jenkins
