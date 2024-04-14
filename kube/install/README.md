@@ -97,8 +97,10 @@
 
     Ex: kubeadm join 10.128.15.231:6443 --token mks3y2.v03tyyru0gy12mbt \
            --discovery-token-ca-cert-hash sha256:3de23d42c7002be0893339fbe558ee75e14399e11f22e3f0b34351077b7c4b56
+	   
+Please refer below blog
 
-
+https://www.linuxtechi.com/install-kubernetes-on-ubuntu-22-04/
 
 
 ## how to find kubeadm join token later
