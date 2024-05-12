@@ -1,0 +1,98 @@
+ 131  sudo apt list --installed kubeadm kubectl kubelet
+  132  kubectl get nodes
+  133  kubectl get nodes -o wide
+  134  kubectl get nodes
+  135  hostname
+  136  hostnamectl get-hostname
+  137  hostnamectl
+  138  kubectl get nodes
+  139  kubectl get nodes -o wide
+  140  kubectl get all
+  141  pwd
+  142  ls
+  143  kubectl get deployments.apps
+  144  kubectl get deployments.apps -o wide
+  145  kubectl get services
+  146  kubectl get pods -o wide
+  147  kubectl get nodes
+  148  kubectl get deployments.apps
+  149  kubectl get pods
+  150  kubectl get pods -o wide
+  151  kubectl cordon k8sworker1.example.net
+  152  kubectl get nodes
+  153  kubectl get pods -o wide
+  154  kubectl get deployments.apps
+  155  kubectl get pods -o wide
+  156  kubectl get nodes
+  157  kubectl scale deployment edureka-deployment --replicas=3
+  158  kubectl get pods -o wide
+  159  kubectl uncordon k8sworker1.example.net
+  160  kubectl get pods -o wide
+  161  kubectl get nodes
+  162  kubectl scale deployment edureka-deployment --replicas=4
+  163  kubectl get pods -o wide
+  164  kubectl cordon k8sworker1.example.net
+  165  kubectl get nodes
+  166  kubectl drain --ignore-daemonsets --force k8sworker1.example.net
+  167  kubectl get nodes
+  168  kubectl get pods -o wide
+  169  kubectl delete node k8sworker1.example.net
+  170  kubectl get nodes
+  171  kubectl get services
+  172  kubectl describe service edureka-service
+  173  curl http://10.102.171.38:31921/webapp
+  174  kubectl get nodes
+  175  kubeadm token --help
+  176  kubeadm token create --help
+  177  kubeadm token create --print-join-command
+  178  kubectl get nodes
+  179  history
+  180  kubectl get daemonsets.apps --all-namespaces
+  181  kubectl get nodes
+  182  kubectl describe node k8sworker1.example.net
+  183  kubectl get nodes -o wide
+  184  kubectl get all
+  185  kubectl delete -f edureka-service.yml -f edureka-deploy.yml
+  186  kubectl get all
+  187  kubectl get nodes
+  188  kubectl get pods
+  189  kubectl get deployments.apps
+  190  kubectl get rs
+  191  ifconfig
+  192  sudo apt install net-tools -y
+  193  ifconfg
+  194  ifconfig
+  195  id ansadmin
+  196  cd .ssh/
+  197  cat authorized_keys
+  198  cd
+  199  pwd
+  200  ls
+  201  cat edureka-deploy.yml
+  202  cat edureka-service.yml
+  203  cat edureka-deploy.yml
+  204  kubectl apply -f edureka-deploy.yml
+  205  kubectl get deployments.apps
+  206  kubectl get rs
+  207  kubectl get pods -o wide
+  208  kubectl describe pod edureka-deployment-64fb57746d-94tmz
+  209  kubectl get pods -o wide
+  210  cat edureka-deploy.yml
+  211  kubectl get pods -o wide
+  212  kubectl delete pod edureka-deployment-64fb57746d-94tmz
+  213  kubectl get pods -o wide
+  214  pwd
+  215  ls
+  216  pwd
+  217  ls
+  218  kubectl get all
+  219  kubectl delete deployments.apps edureka-deployment
+  220  kubectl get all
+  221  vi edureka-service.yml
+  222  vi edureka-deploy.yml
+  223  cat edureka-deploy.yml
+  224  pwd
+  225  ls
+  226  cat edureka-deploy.yml
+  227  cat edureka-service.yml
+  228  history
