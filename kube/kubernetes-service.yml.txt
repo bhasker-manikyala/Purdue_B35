@@ -1,0 +1,9 @@
+---
+- name: create service for deployment
+  hosts: Control
+  # become: true
+  user: ubuntu
+
+  tasks:
+  - name: create a service
+    command: kubectl apply -f edureka-service.yml

@@ -1,0 +1,14 @@
+---
+- hosts: ansible
+
+  tasks:
+  - name: Create Docker Image
+    command: docker image build -t java-app:v1 .
+    args:
+      chdir: /opt/docker
+
+  - name: Create tag to push image onto DockerHub
+    command: docker image tag java-app:v1 edurekadevops/java-app:v1
+
+  - name: Push Docker Image onto DockerHub
+    command: docker image push edurekadevops/java-app:v1
