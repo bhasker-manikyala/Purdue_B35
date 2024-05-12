@@ -96,3 +96,14 @@
   226  cat edureka-deploy.yml
   227  cat edureka-service.yml
   228  history
+
+
+On K8s worker node
+
+$ sudo rm -rf /etc/kubernetes
+
+$ sudo systemctl daemon-reload
+
+$ sudo systemctl stop kubelet
+
+$ sudo kubeadm join ----
