@@ -1,0 +1,466 @@
+pipeline {
+    agent any
+   environment {
+    myjava = "/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+   }
+    stages {
+        stage('pre') {
+            steps {
+                echo "predefined variable $BUILD_NUMBER $WORKSPACE"
+            }
+        }
+         stage('User') {
+             environment {
+             myjava = "/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+            }
+            steps {
+                script {
+                    myjava = "/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+                }
+                echo "userdefined variable $myjava"
+            }
+        }
+        stage('Hello World') {
+            steps {
+                echo "Hello World"
+                sh '''cat /proc/cpuinfo > /tmp/cpuinfo.txt
+                free -m > /tmp/meminfo.txt
+                df -hT > /tmp/diskinfo.txt'''
+            }
+        }
+    }
+}
+
+
+pipeline {
+    agent any
+    parameters {
+        string(name:'DEPLOY_ENV',defaultValue:'staging',description:"")
+        text(defaultValue:'''One
+Two
+Three''',name:'DEPLOY_TEXT')
+        booleanParam(name:'TOGGLE',defaultValue:true,description:"Toggle this value")
+        choice(name:'CHOICE',choices:['One','Two','Three'],description:'Pick Something')
+        file(name:'FILE',description:'Some file to upload')
+        password(name:'PASSWORD',defaultValue:'SECRET',description:'A secret password')
+         }
+         stages {
+            stage('String'){
+                steps {
+                    echo "String $DEPLOY_ENV"
+                }
+            }
+            stage('Text') {
+                steps{
+                    echo "Text $DEPLOY_TEXT"
+                }
+            }
+            stage('BooleanParam'){
+                steps {
+                    script {
+                        if(TOGGLE) {
+                            echo "Now execute, boolean is true"
+                        } else {
+                            echo "Dont execute, boolean is true"
+                        }
+                    }
+                }
+            }
+            stage('Choice'){
+                steps {
+                    script {
+                        if(DEPLOY_ENV=='staging') {
+                            echo "choice $CHOICE"
+                        }
+                    }
+                }
+            }
+            stage('file'){
+                steps {
+                    echo "file is $FILE"
+                }
+            }
+            stage('Password') {
+                steps {
+                    echo "Password is $PASSWORD"
+                }
+            }
+
+
+         }
+}
+
+
+
+
+
+
+
+
+
+
+
+Below Pipeline script runs on any agent(Master)
+
+pipeline {
+    
+    agent any
+    
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+
+   stages{
+       
+       stage('CloneRepo')
+       {
+           steps{
+               git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+ 
+           }
+       }
+       
+       stage('Compile')
+       {
+           steps{
+               sh  'mvn compile'
+               
+           }
+       }
+       
+       stage('CodeReview')
+       {
+           steps{
+               sh 'mvn pmd:pmd'
+           }
+           post{
+               success{
+                   recordIssues(tools: [pmdParser(pattern: 'target/pmd.xml')])
+               }
+           }
+       }
+       
+       stage('UnitTesting')
+       {
+           steps{
+               sh 'mvn test'
+           }
+           post{
+               success{
+                   junit 'target/surefire-reports/*.xml'
+               }
+           }
+       }
+       
+       stage('CodeCoverage')
+       {
+           steps{
+               sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+           }
+       }
+       
+       stage('package')
+       {
+           steps{
+               sh 'mvn package'
+           }
+       }
+   }
+   
+   
+}
+
+
+Below Pipeline script runs on linux-slave01 with Cobertura Post build actions.
+
+
+pipeline {
+    
+    agent {
+        label 'slave01'
+    }
+    
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+
+   stages{
+       
+       stage('CloneRepo')
+       {
+           steps{
+               git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+ 
+           }
+       }
+       
+       stage('Compile')
+       {
+           steps{
+               sh  'mvn compile'
+               
+           }
+       }
+       
+       stage('CodeReview')
+       {
+           steps{
+               sh 'mvn pmd:pmd'
+           }
+           post{
+               success{
+                   recordIssues(tools: [pmdParser(pattern: 'target/pmd.xml')])
+               }
+           }
+       }
+       
+       stage('UnitTesting')
+       {
+           steps{
+               sh 'mvn test'
+           }
+           post{
+               success{
+                   junit 'target/surefire-reports/*.xml'
+               }
+           }
+       }
+       
+       stage('CodeCoverage')
+       {
+           steps{
+               sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+           }
+           post{
+               success{
+                   cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/site/cobertura/coverage.xml', conditionalCoverageTargets: '70, 0, 0', failNoReports: false, failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', sourceEncoding: 'ASCII', zoomCoverageChart: false
+               }
+           }
+       }
+       
+       stage('package')
+       {
+           steps{
+               sh 'mvn package'
+           }
+       }
+   }
+   
+   
+}
+
+
+
+
+
+
+Running Pipeline script on Linux slave using global
+===================================================
+
+pipeline{
+    
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent {label 'slave01'}
+    stages{
+        stage('clone repo'){
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+                }
+        }
+        stage('Compile'){
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn compile'
+                }
+        }
+        stage('CodeReview'){
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn pmd:pmd'
+                }
+        }
+        stage('Unit Test'){
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn test'
+                }
+        }
+     stage('CodeCoverage'){
+           steps{
+          
+            sh 'mvn cobertura:cobertura -Dcobertura.format=xml'
+                }
+        }
+             stage('Packge'){
+            steps{
+                
+              sh 'mvn package'
+                }
+        }
+    }
+}
+
+Running Pipeline script on Linux slave using stage section.
+===========================================================
+
+pipeline{
+    
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent none
+    stages{
+        stage('clone repo'){
+            agent any
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+                }
+        }
+        stage('Compile'){
+            agent {label 'slave01'}
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn compile'
+                }
+        }
+        stage('CodeReview'){
+             agent any
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn pmd:pmd'
+                }
+        }
+        stage('Unit Test'){
+               agent {label 'slave01'}
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn test'
+                }
+        }
+     stage('CodeCoverage'){
+           agent {label 'slave01'}
+            steps{
+          
+            sh 'mvn cobertura:cobertura -Dcobertura.format=xml'
+                }
+        }
+             stage('Packge'){
+                 agent {label 'slave01'}
+            steps{
+                
+              sh 'mvn package'
+                }
+        }
+    }
+}
+
+How to install and configure Apache Tomcat. Show them practically.
+
+Running Pipeline script and deploy on tomcat server using ssh-agent plugin.
+===========================================================================
+pipeline{
+    
+    agent any
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('cloneRepo'){
+            steps{
+                git 'https://github.com/bhasker-manikyala/DevOpsClassCodes.git'
+            }
+        }
+        stage('package')
+        {
+            steps{
+                sh 'mvn clean install package'
+            }
+        }
+        
+        stage('Deploy on tomcat'){
+            steps{
+                
+                sshagent(['idnew']) {
+     sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Pipeline_deploy/target/addressbook.war  jenkins@10.0.4.68:/opt/apache-tomcat-9.0.64/webapps'
+}
+                
+            }
+            
+        }
+    }
+}
+
+
+
+Running Pipeline script and deploy on tomcat server using deploy to container plugin.
+====================================================================================
+
+pipeline{
+    
+    agent any
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('cloneRepo'){
+            steps{
+                git 'https://github.com/bhasker-manikyala/DevOpsClassCodes.git'
+            }
+        }
+        stage('package')
+        {
+            steps{
+                sh 'mvn clean install package'
+            }
+        }
+        
+        stage('Deploy on tomcat'){
+            steps{
+               deploy adapters: [tomcat9(credentialsId: 'Tomcat_user', path: '', url: 'http://13.233.87.46:8090/')], contextPath: null, war: '**/*.war' 
+            }
+            
+        }
+    }
+}
+
+
+Jenkins Integration with Docker.
+
+
+Creating CICD Pipeline for node.js application
+==============================================
+
+Creating NodeJS pipeline
+
+1. In the Free-style Project -- Under Source code Management  -- git "https://github.com/bhasker-manikyala/node-jenkins-app-example.git"
+
+2. In the Build Environment, select Provide Node and npm bin/ folder to PATH, select your NodeJS(What you have installed in Global tool Config)
+
+3. In the Build section, npm install && npm test
+
+4. Add Build Step --> Send files or execute commands over SSH --> SSH Server-- Select your Docker Server -- Transfer Set Source files **/**
+   Remote Directory -- NodeJS  and after Execute commands below
+
+docker container stop edureka_demo;
+docker container rm -f edureka_demo;
+docker image rm -f edureka_demo;
+cd /home/dockeradmin/NodeJs;
+docker image build -t edureka_demo .
+
+5. 4. Add Build Step --> Send files or execute commands over SSH --> SSH Server-- Select your Docker Server -- Execute command ---
+
+docker container run -d --name edureka_demo -p 3000:3000 edureka_demo
+
+
+
+
