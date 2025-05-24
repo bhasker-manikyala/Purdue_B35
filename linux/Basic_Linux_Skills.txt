@@ -1,0 +1,30 @@
+FHS
+Basic commands
+Editors -- vi, vim, nano
+
+User and Group Mgmt:
+
+$ useradd or adduser   --- /etc/passwd
+$ usermod                  /etc/shadow
+$ userdel
+
+
+$ groupadd        -- /etc/group
+$ groupmod           /etc/gshadow
+$ groupdel
+
+File Access Permissions
+
+umask, chmod, chown, setfacl, getfacl
+
+Package Mgmt
+
+apt-get install/remove/list/upgrade
+
+
+Service Mgmt
+
+$ systemctl start/stop/restart/enable/disable service-name
+
+
+Networking skills
