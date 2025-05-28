@@ -1,0 +1,215 @@
+Running Pipeline script on Linux slave using global
+===================================================
+
+pipeline{
+    
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent {label 'slave01'}
+    stages{
+        stage('clone repo'){
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+                }
+        }
+        stage('Compile'){
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn compile'
+                }
+        }
+        stage('CodeReview'){
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn pmd:pmd'
+                }
+        }
+        stage('Unit Test'){
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn test'
+                }
+        }
+     stage('CodeCoverage'){
+           steps{
+          
+            sh 'mvn cobertura:cobertura -Dcobertura.format=xml'
+                }
+        }
+             stage('Packge'){
+            steps{
+                
+              sh 'mvn package'
+                }
+        }
+    }
+}
+
+Running Pipeline script on Linux slave using stage section.
+===========================================================
+
+pipeline{
+    
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    agent none
+    stages{
+        stage('clone repo'){
+            agent any
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+                }
+        }
+        stage('Compile'){
+            agent {label 'slave01'}
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn compile'
+                }
+        }
+        stage('CodeReview'){
+             agent any
+            steps{
+              git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn pmd:pmd'
+                }
+        }
+        stage('Unit Test'){
+               agent {label 'slave01'}
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+              sh 'mvn test'
+                }
+        }
+     stage('CodeCoverage'){
+           agent {label 'slave01'}
+            steps{
+          
+            sh 'mvn cobertura:cobertura -Dcobertura.format=xml'
+                }
+        }
+             stage('Packge'){
+                 agent {label 'slave01'}
+            steps{
+                
+              sh 'mvn package'
+                }
+        }
+    }
+}
+
+How to install and configure Apache Tomcat. Show them practically.
+
+Running Pipeline script and deploy on tomcat server using ssh-agent plugin.
+===========================================================================
+pipeline{
+    
+    agent any
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('cloneRepo'){
+            steps{
+                git 'https://github.com/bhasker-manikyala/DevOpsClassCodes.git'
+            }
+        }
+        stage('package')
+        {
+            steps{
+                sh 'mvn clean install package'
+            }
+        }
+        
+        stage('Deploy on tomcat'){
+            steps{
+                
+                sshagent(['idnew']) {
+     sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Pipeline_deploy/target/addressbook.war  jenkins@10.0.4.68:/opt/apache-tomcat-9.0.64/webapps'
+}
+                
+            }
+            
+        }
+    }
+}
+
+
+
+Running Pipeline script and deploy on tomcat server using deploy to container plugin.
+====================================================================================
+
+pipeline{
+    
+    agent any
+    tools{
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('cloneRepo'){
+            steps{
+                git 'https://github.com/bhasker-manikyala/DevOpsClassCodes.git'
+            }
+        }
+        stage('package')
+        {
+            steps{
+                sh 'mvn clean install package'
+            }
+        }
+        
+        stage('Deploy on tomcat'){
+            steps{
+               deploy adapters: [tomcat9(credentialsId: 'Tomcat_user', path: '', url: 'http://13.233.87.46:8090/')], contextPath: null, war: '**/*.war' 
+            }
+            
+        }
+    }
+}
+
+
+Jenkins Integration with Docker.
+
+
+Creating CICD Pipeline for node.js application
+==============================================
+
+https://github.com/bhasker-manikyala/node-jenkins-app-example.git  -- Sample NodeJs Repository
+
+https://tecadmin.net/install-latest-nodejs-amazon-linux/   --- How to install nodejs on Amazon Linux.
+
+https://blog.harveydelaney.com/jenkins-build-test-deploy-node-app/  -- Reference below
+https://blog.harveydelaney.com/jenkins-build-test-deploy-node-app/
+
+Creating NodeJS pipeline
+
+1. In the Free-style Project -- Under Source code Management  -- git "https://github.com/bhasker-manikyala/node-jenkins-app-example.git"
+
+2. In the Build Environment, select Provide Node and npm bin/ folder to PATH, select your NodeJS(What you have installed in Global tool Config)
+
+3. In the Build section, npm install && npm test
+
+4. Add Build Step --> Send files or execute commands over SSH --> SSH Server-- Select your Docker Server -- Transfer Set Source files **/**
+   Remote Directory -- NodeJS  and after Execute commands below
+
+docker container stop edureka_demo;
+docker container rm -f edureka_demo;
+docker image rm -f edureka_demo;
+cd /home/dockeradmin/NodeJs;
+docker image build -t edureka_demo .
+
+5. 4. Add Build Step --> Send files or execute commands over SSH --> SSH Server-- Select your Docker Server -- Execute command ---
+
+docker container run -d --name edureka_demo -p 3000:3000 edureka_demo
+
+
+
+
