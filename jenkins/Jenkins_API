@@ -1,0 +1,23 @@
+Job Configuration file:
+
+http://18.141.219.101:8080/job/Edureka-Demo/config.xml
+
+Listing Jobs:
+
+http://18.141.219.101:8080/api/json?tree=jobs[Edureka-Demo]
+
+Building a Job(Unparameterized Job):
+
+http://18.141.219.101:8080/job/Edureka-Demo/build
+
+Building a Job(parameterized Job):
+
+http://18.141.219.101:8080/buildByToken/buildWithParameters?token=54321&job=Edureka-Demo&whoami=Ali&filename=test.txt
+
+Build History:
+
+http://18.141.219.101:8080/job/Job1/api/json?tree=allBuilds[*]
+
+Displaying Output Console for a Particular Job
+
+http://18.141.219.101:8080/job/Job1/4/logText/progressiveText?start=0
